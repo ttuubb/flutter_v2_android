@@ -4,7 +4,7 @@
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
-            android:name=".MainActivity"
+            android:name="com.v2ray.ang.flutter_v2_android.MainActivity"
             android:exported="true"
             android:launchMode="singleTop"
             android:taskAffinity=""
@@ -32,7 +32,7 @@
             android:value="2" />
         <!-- VPN服务声明 -->
         <service
-            android:name=".vpn.V2rayVpnService"
+            android:name="com.v2ray.ang.flutter_v2_android.vpn.V2rayVpnService"
             android:permission="android.permission.BIND_VPN_SERVICE"
             android:exported="false">
             <intent-filter>

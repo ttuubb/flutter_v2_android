@@ -1,34 +1,79 @@
-// 添加V2Ray动态库设置
-android {
-    // ... 其他设置
+plugins {
+    id "com.android.application"
+    id "kotlin-android"
+    id "dev.flutter.flutter-gradle-plugin"
+}
 
-    // 添加对C/C++的支持
-    externalNativeBuild {
-        cmake {
-            path file('CMakeLists.txt')
-        }
+def localProperties = new Properties()
+def localPropertiesFile = rootProject.file('local.properties')
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.withReader('UTF-8') { reader ->
+        localProperties.load(reader)
+    }
+}
+
+def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
+if (flutterVersionCode == null) {
+    flutterVersionCode = '1'
+}
+
+def flutterVersionName = localProperties.getProperty('flutter.versionName')
+if (flutterVersionName == null) {
+    flutterVersionName = '1.0'
+}
+
+android {
+    namespace "com.v2ray.ang.flutter_v2_android"
+    compileSdkVersion 33
+    ndkVersion flutter.ndkVersion
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 
-    // 添加自定义的库目录
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+
     sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
         main {
             jniLibs.srcDirs = ['src/main/jniLibs']
         }
     }
-    
-    // 构建变体配置
+
+    defaultConfig {
+        applicationId "com.v2ray.ang.flutter_v2_android"
+        minSdkVersion 21
+        targetSdkVersion 33
+        versionCode flutterVersionCode.toInteger()
+        versionName flutterVersionName
+        ndk {
+            abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-    
-    // 支持的架构
-    defaultConfig {
-        // ... 其他配置
-        ndk {
-            abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
+
+    // 添加对C/C++的支持
+    /*externalNativeBuild {
+        cmake {
+            path file('CMakeLists.txt')
         }
-    }
+    }*/
+}
+
+flutter {
+    source '../..'
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.0"
+} 
 } 
